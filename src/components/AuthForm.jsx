@@ -2,16 +2,27 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import supabase from '../services/supabase.js'
 
-function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref }) {
+function AuthForm({
+  mode,
+  title,
+  buttonLabel,
+  footerText,
+  footerLinkLabel,
+  footerHref,
+}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [oauthError, setOauthError] = useState('')
+  const [formError, setFormError] = useState('')
 
   const handleGoogleSignIn = async () => {
     setOauthError('')
+    setFormError('')
     setIsGoogleLoading(true)
+    sessionStorage.setItem('postAuthRedirect', '/dashboard')
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -28,6 +39,7 @@ function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref 
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    setFormError('')
 
     const nextErrors = {}
 
@@ -40,6 +52,32 @@ function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref 
     }
 
     setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
+      return
+    }
+
+    const submitAuthForm = async () => {
+      setIsSubmitting(true)
+      sessionStorage.setItem('postAuthRedirect', '/dashboard')
+
+      const credentials = {
+        email: email.trim(),
+        password: password.trim(),
+      }
+
+      const { error } =
+        mode === 'signup'
+          ? await supabase.auth.signUp(credentials)
+          : await supabase.auth.signInWithPassword(credentials)
+
+      if (error) {
+        setFormError(error.message)
+        setIsSubmitting(false)
+      }
+    }
+
+    submitAuthForm()
   }
 
   return (
@@ -55,7 +93,7 @@ function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref 
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            disabled={isGoogleLoading}
+            disabled={isGoogleLoading || isSubmitting}
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 font-medium text-stone-800 transition duration-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
           >
             <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
@@ -82,6 +120,8 @@ function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref 
           {oauthError ? (
             <p className="text-sm text-red-500">{oauthError}</p>
           ) : null}
+
+          {formError ? <p className="text-sm text-red-500">{formError}</p> : null}
 
           <div className="flex items-center gap-3">
             <div className="h-px flex-1 bg-stone-200" />
@@ -141,9 +181,10 @@ function AuthForm({ title, buttonLabel, footerText, footerLinkLabel, footerHref 
 
           <button
             type="submit"
-            className="w-full rounded-2xl bg-stone-900 px-4 py-3 text-base font-medium text-white shadow-lg shadow-stone-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-100"
+            disabled={isSubmitting || isGoogleLoading}
+            className="w-full rounded-2xl bg-stone-900 px-4 py-3 text-base font-medium text-white shadow-lg shadow-stone-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {buttonLabel}
+            {isSubmitting ? 'Please wait...' : buttonLabel}
           </button>
         </form>
 
