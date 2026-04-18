@@ -24,7 +24,7 @@ function Hero() {
 
           <h1 className="mt-8 text-5xl font-semibold tracking-tight text-stone-950 sm:text-6xl lg:text-7xl">
             Fund your creative work with a little{' '}
-            <span className="text-amber-600">chai ☕</span>
+            <span className="text-amber-600">chai {'\u2615'}</span>
           </h1>
 
           <p className="mt-6 text-lg leading-8 text-stone-600 sm:text-xl">
@@ -63,7 +63,7 @@ function Hero() {
               </div>
 
               <button className="mt-6 w-full rounded-2xl bg-amber-500 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-amber-400/40 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-600 hover:shadow-xl">
-                Buy me a chai ☕
+                Buy me a chai {'\u2615'}
               </button>
 
               <div className="mt-6 space-y-3">

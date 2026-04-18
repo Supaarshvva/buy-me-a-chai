@@ -6,7 +6,7 @@ function Navbar() {
           href="#"
           className="text-lg font-semibold tracking-tight text-stone-900 transition hover:text-amber-700"
         >
-          Buy Me a Chai ☕
+          Buy Me a Chai {'\u2615'}
         </a>
 
         <div className="flex items-center gap-3">
