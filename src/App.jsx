@@ -1,18 +1,18 @@
-import FeaturesSection from './FeaturesSection.jsx'
-import Hero from './Hero.jsx'
-import Navbar from './Navbar.jsx'
-import StatsSection from './StatsSection.jsx'
-import WhySection from './WhySection.jsx'
+import { Route, Routes } from 'react-router-dom'
+import Login from './pages/Login.jsx'
+import Landing from './pages/Landing.jsx'
+import Signup from './pages/Signup.jsx'
+import supabase from './services/supabase.js'
 
 function App() {
+  void supabase
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 text-stone-900">
-      <Navbar />
-      <Hero />
-      <WhySection />
-      <FeaturesSection />
-      <StatsSection />
-    </div>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+    </Routes>
   )
 }
 
