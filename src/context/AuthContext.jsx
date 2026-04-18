@@ -5,7 +5,34 @@ const AuthContext = createContext(undefined)
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [profile, setProfile] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [profileLoading, setProfileLoading] = useState(true)
+
+  const refreshProfile = async (targetUser = user) => {
+    if (!targetUser) {
+      setProfile(null)
+      setProfileLoading(false)
+      return null
+    }
+
+    setProfileLoading(true)
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, username, full_name, bio, avatar_url')
+      .eq('id', targetUser.id)
+      .maybeSingle()
+
+    console.log('AuthContext profile check user:', targetUser)
+    console.log('AuthContext profile check profile:', data ?? null)
+    console.log('AuthContext profile check error:', error ?? null)
+
+    setProfile(data ?? null)
+    setProfileLoading(false)
+
+    return data ?? null
+  }
 
   useEffect(() => {
     let isMounted = true
@@ -15,9 +42,12 @@ function AuthProvider({ children }) {
         data: { session },
       } = await supabase.auth.getSession()
 
+      console.log('AuthContext session user:', session?.user ?? null)
+
       if (isMounted) {
+        setProfileLoading(Boolean(session?.user))
         setUser(session?.user ?? null)
-        setLoading(false)
+        setAuthLoading(false)
       }
     }
 
@@ -26,9 +56,12 @@ function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('AuthContext auth change user:', session?.user ?? null)
+
       if (isMounted) {
+        setProfileLoading(Boolean(session?.user))
         setUser(session?.user ?? null)
-        setLoading(false)
+        setAuthLoading(false)
       }
     })
 
@@ -38,8 +71,45 @@ function AuthProvider({ children }) {
     }
   }, [])
 
+  useEffect(() => {
+    let isMounted = true
+
+    const loadProfile = async () => {
+      if (!user) {
+        if (isMounted) {
+          setProfile(null)
+          setProfileLoading(false)
+        }
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, username, full_name, bio, avatar_url')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      console.log('AuthContext profile check user:', user)
+      console.log('AuthContext profile check profile:', data ?? null)
+      console.log('AuthContext profile check error:', error ?? null)
+
+      if (isMounted) {
+        setProfile(data ?? null)
+        setProfileLoading(false)
+      }
+    }
+
+    loadProfile()
+
+    return () => {
+      isMounted = false
+    }
+  }, [user])
+
+  const loading = authLoading || profileLoading
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )

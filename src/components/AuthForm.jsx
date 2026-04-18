@@ -1,15 +1,21 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  POST_AUTH_REDIRECT_KEY,
+  getPostAuthRedirectPath,
+} from '../services/postAuthRedirect.js'
 import supabase from '../services/supabase.js'
 
 function AuthForm({
   mode,
   title,
+  subtitle,
   buttonLabel,
   footerText,
   footerLinkLabel,
   footerHref,
 }) {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
@@ -18,11 +24,23 @@ function AuthForm({
   const [oauthError, setOauthError] = useState('')
   const [formError, setFormError] = useState('')
 
+  const routeAfterAuthentication = async () => {
+    const nextPath = await getPostAuthRedirectPath()
+    sessionStorage.removeItem(POST_AUTH_REDIRECT_KEY)
+
+    if (!nextPath) {
+      setIsSubmitting(false)
+      return
+    }
+
+    navigate(nextPath, { replace: true })
+  }
+
   const handleGoogleSignIn = async () => {
     setOauthError('')
     setFormError('')
     setIsGoogleLoading(true)
-    sessionStorage.setItem('postAuthRedirect', '/dashboard')
+    sessionStorage.setItem(POST_AUTH_REDIRECT_KEY, 'pending')
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -32,6 +50,7 @@ function AuthForm({
     })
 
     if (error) {
+      sessionStorage.removeItem(POST_AUTH_REDIRECT_KEY)
       setOauthError('Unable to continue with Google right now. Please try again.')
       setIsGoogleLoading(false)
     }
@@ -59,7 +78,7 @@ function AuthForm({
 
     const submitAuthForm = async () => {
       setIsSubmitting(true)
-      sessionStorage.setItem('postAuthRedirect', '/dashboard')
+      sessionStorage.setItem(POST_AUTH_REDIRECT_KEY, 'pending')
 
       const credentials = {
         email: email.trim(),
@@ -72,9 +91,13 @@ function AuthForm({
           : await supabase.auth.signInWithPassword(credentials)
 
       if (error) {
+        sessionStorage.removeItem(POST_AUTH_REDIRECT_KEY)
         setFormError(error.message)
         setIsSubmitting(false)
+        return
       }
+
+      await routeAfterAuthentication()
     }
 
     submitAuthForm()
@@ -87,6 +110,7 @@ function AuthForm({
           <h1 className="text-3xl font-semibold tracking-tight text-stone-950">
             {title}
           </h1>
+          <p className="mt-3 text-base text-stone-600">{subtitle}</p>
         </div>
 
         <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>

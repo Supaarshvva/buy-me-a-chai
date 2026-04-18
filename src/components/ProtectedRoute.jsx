@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
-function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth()
+function ProtectedRoute({ children, requireProfile = false, requireNoProfile = false }) {
+  const { user, profile, loading } = useAuth()
 
   if (loading) {
     return (
@@ -14,6 +14,14 @@ function ProtectedRoute({ children }) {
 
   if (!user) {
     return <Navigate to="/login" replace />
+  }
+
+  if (requireProfile && !profile) {
+    return <Navigate to="/create-profile" replace />
+  }
+
+  if (requireNoProfile && profile) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return children
