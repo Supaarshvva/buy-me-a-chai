@@ -1,16 +1,11 @@
 import { useEffect } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext.jsx'
 import {
   POST_AUTH_REDIRECT_KEY,
   getPostAuthRedirectPath,
 } from './services/postAuthRedirect.js'
-import CreateProfile from './pages/CreateProfile.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import Login from './pages/Login.jsx'
-import Landing from './pages/Landing.jsx'
-import Signup from './pages/Signup.jsx'
+import AppRoutes from './routes/AppRoutes.jsx'
 
 function App() {
   const { user, loading } = useAuth()
@@ -48,27 +43,7 @@ function App() {
   }, [loading, navigate, user])
 
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/create-profile"
-        element={
-          <ProtectedRoute requireNoProfile>
-            <CreateProfile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+    <AppRoutes />
   )
 }
 
