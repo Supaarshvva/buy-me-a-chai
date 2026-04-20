@@ -1,16 +1,172 @@
-# React + Vite
+☕ Buy Me a Chai
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack creator support platform where users can receive direct support via UPI.
+Built with a clean UI, real-time data handling, and secure backend using Supabase.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🚀 Live Concept
 
-## React Compiler
+Buy Me a Chai allows creators to:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Create a public profile
+- Share content
+- Receive support (₹) directly via UPI
+- Track supporters and earnings
 
-## Expanding the ESLint configuration
+Supporters can:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Explore creators
+- Support them instantly
+- Stay updated through notifications
+
+---
+
+✨ Features
+
+👤 Authentication
+
+- Google / Email login (Supabase Auth)
+- Secure session handling
+
+🧑‍🎨 Creator Profiles
+
+- Unique username system
+- Permanent full name (set once)
+- Editable bio & avatar
+- UPI ID integration
+
+💸 UPI Support System
+
+- Mobile → UPI deep link (GPay / PhonePe)
+- Desktop → QR code payment
+- Payment success simulation
+- Reference number verification
+- Self-support prevention
+
+🔔 Notifications
+
+- Real-time support notifications
+- Read/unread indicator
+- Dynamic updates
+
+📊 Dashboard
+
+- Earnings overview
+- Support history
+- Recent supporters
+
+🔍 Explore Page
+
+- Trending creators (based on real support data)
+- Dynamic leaderboard
+- Public creator profiles
+
+---
+
+🛠️ Tech Stack
+
+Frontend
+
+- React (Vite)
+- Tailwind CSS
+- Framer Motion (for UI animations)
+
+Backend (Supabase)
+
+- PostgreSQL Database
+- Supabase Auth
+- Supabase Storage (avatars)
+- Row Level Security (RLS)
+- RPC Functions for public data
+
+---
+
+🔐 Security (RLS)
+
+We implemented Row Level Security for the "supports" table:
+
+- Users can insert only their own support:
+  
+  auth.uid() = supporter_id
+
+- Users can view:
+  
+  - supports they gave
+  - supports they received
+
+Public data is accessed via secure RPC functions.
+
+---
+
+⚙️ Supabase Setup
+
+Required Tables
+
+- profiles
+- supports
+- notifications
+
+RPC Functions
+
+get_creator_supports(target_creator_id uuid)
+get_creator_support_counts()
+
+---
+
+🧪 Payment Flow (UPI Simulation)
+
+Due to time constraints and demo requirements:
+
+- Real UPI redirection is implemented
+- Payment verification is simulated using reference number input
+
+This allows a realistic UX while keeping the system simple.
+
+---
+
+📱 Responsive Design
+
+- Fully responsive UI
+- Optimized for mobile and desktop
+- Clean, modern design system
+
+---
+
+🧹 Code Quality
+
+- Cleaned and refactored codebase
+- Removed unused logic and dead code
+- Centralized core logic
+- Supabase as single source of truth (no localStorage)
+
+---
+
+📌 Project Status
+
+✅ Complete and functional
+✅ Clean UI/UX
+✅ Secure backend
+✅ Ready for demo/submission
+
+---
+
+🎯 Future Improvements
+
+- Razorpay / real payment verification
+- Creator payouts (marketplace model)
+- Comments & engagement features
+- Analytics dashboard
+- Subscription model
+
+---
+
+👨‍💻 Author
+
+Built with focus on clean architecture, real-world usability, and simplicity.
+
+---
+
+📄 License
+
+This project is for educational purposes.

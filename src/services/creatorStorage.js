@@ -59,20 +59,6 @@ function sanitizePost(post) {
   }
 }
 
-function sanitizeSupporter(supporter) {
-  return {
-    id: supporter.id ?? Date.now(),
-    name: typeof supporter.name === 'string' ? supporter.name : '',
-    creatorUsername:
-      typeof supporter.creatorUsername === 'string' ? supporter.creatorUsername : '',
-    cups: Number.isFinite(supporter.cups) ? supporter.cups : 0,
-    amount: Number.isFinite(supporter.amount) ? supporter.amount : 0,
-    message: typeof supporter.message === 'string' ? supporter.message : '',
-    monthly: Boolean(supporter.monthly),
-    createdAt:
-      typeof supporter.createdAt === 'number' ? supporter.createdAt : Date.now(),
-  }
-}
 
 function mergePostsById(posts) {
   const postMap = new Map()

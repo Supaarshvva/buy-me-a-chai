@@ -49,7 +49,6 @@ function CreatorPublicPage({ showAllPosts = false }) {
   const [customQuantity, setCustomQuantity] = useState('')
   const [supporterName, setSupporterName] = useState('')
   const [supporterMessage, setSupporterMessage] = useState('')
-  const [isSubmittingSupport, setIsSubmittingSupport] = useState(false)
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCreator, setFollowingCreator] = useState(false)
   const [toast, setToast] = useState(null)
@@ -74,9 +73,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
     : selectedQuantity
   const selectedSupportAmount = selectedSupportQuantity * chaiPriceInRupees
   const formattedSupportAmount = formatCurrency(selectedSupportAmount)
-  const supportButtonText = isSubmittingSupport
-    ? `Sending ${formattedSupportAmount}...`
-    : `Support ${formattedSupportAmount}`
+  const supportButtonText = `Support ${formattedSupportAmount}`
   const actorName = currentUserProfile?.full_name?.trim()
     || currentUserProfile?.username?.trim()
     || 'Someone'
@@ -794,7 +791,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
               <button
                 type="button"
                 onClick={handleSupport}
-                disabled={isSubmittingSupport || supportDisabled}
+                disabled={supportDisabled}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-stone-900 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-stone-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 <CoffeeIcon size={16} />

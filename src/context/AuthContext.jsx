@@ -24,9 +24,6 @@ function AuthProvider({ children }) {
       .eq('id', targetUser.id)
       .maybeSingle()
 
-    console.log('AuthContext profile check user:', targetUser)
-    console.log('AuthContext profile check profile:', data ?? null)
-    console.log('AuthContext profile check error:', error ?? null)
 
     setProfile(data ?? null)
     setProfileLoading(false)
@@ -42,7 +39,6 @@ function AuthProvider({ children }) {
         data: { session },
       } = await supabase.auth.getSession()
 
-      console.log('AuthContext session user:', session?.user ?? null)
 
       if (isMounted) {
         setProfileLoading(Boolean(session?.user))
@@ -56,7 +52,6 @@ function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('AuthContext auth change user:', session?.user ?? null)
 
       if (isMounted) {
         setProfileLoading(Boolean(session?.user))
@@ -89,9 +84,6 @@ function AuthProvider({ children }) {
         .eq('id', user.id)
         .maybeSingle()
 
-      console.log('AuthContext profile check user:', user)
-      console.log('AuthContext profile check profile:', data ?? null)
-      console.log('AuthContext profile check error:', error ?? null)
 
       if (isMounted) {
         setProfile(data ?? null)
