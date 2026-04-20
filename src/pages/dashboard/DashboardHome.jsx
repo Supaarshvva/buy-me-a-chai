@@ -19,7 +19,7 @@ function DashboardHome() {
   const fullName = profile?.full_name?.trim() || 'Creator Profile'
   const username = profile?.username?.trim() || ''
   const avatarUrl = profile?.avatar_url?.trim() || ''
-  const { totalAmount, totalSupporters } = useCreatorSupporters(username)
+  const { totalAmount, totalSupporters } = useCreatorSupporters(profile?.id)
   const publicProfileLink = username
     ? `${window.location.origin}/${username}`
     : ''

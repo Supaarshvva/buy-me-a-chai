@@ -27,21 +27,24 @@ function Hero() {
             <span className="text-amber-600">chai {'\u2615'}</span>
           </h1>
 
-          <p className="mt-6 text-lg leading-8 text-stone-600 sm:text-xl">
-            A simple, Indian-first platform for creators to receive support via
-            UPI.
+          <p className="mt-6 max-w-xl text-lg leading-8 text-stone-600 sm:text-xl lg:mx-0">
+            Receive support directly via UPI. No middleman, no delays — just
+            your audience showing up for your work.
           </p>
 
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
-            <button className="w-full rounded-full bg-stone-900 px-6 py-3 text-base font-medium text-white shadow-lg shadow-stone-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl hover:shadow-amber-300/40 sm:w-auto">
-              Start your page
-            </button>
-            <a
-              href="#"
-              className="text-base font-medium text-stone-700 underline decoration-stone-300 underline-offset-4 transition hover:text-amber-700 hover:decoration-amber-400"
-            >
-              Explore creators
-            </a>
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 lg:justify-start">
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-500">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-xs">✓</span>
+              Instant UPI payments
+            </div>
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-500">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-xs">✓</span>
+              Zero platform fees
+            </div>
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-500">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-xs">✓</span>
+              Your own creator page
+            </div>
           </div>
         </section>
 

@@ -1,7 +1,6 @@
 const POSTS_STORAGE_KEY = 'posts'
 const LEGACY_POSTS_STORAGE_PREFIX = 'buy-me-a-chai:posts'
 const POST_LIKES_STORAGE_PREFIX = 'buy-me-a-chai:post-likes'
-const SUPPORTERS_STORAGE_PREFIX = 'buy-me-a-chai:supporters'
 const POSTS_UPDATED_EVENT = 'buy-me-a-chai:posts-updated'
 
 function canUseStorage() {
@@ -12,9 +11,7 @@ function getPostLikesStorageKey(scope) {
   return `${POST_LIKES_STORAGE_PREFIX}:${scope || 'local'}`
 }
 
-function getSupportersStorageKey(scope) {
-  return `${SUPPORTERS_STORAGE_PREFIX}:${scope || 'local'}`
-}
+
 
 function sortLatestFirst(items) {
   return [...items].sort((left, right) => right.createdAt - left.createdAt)
@@ -231,32 +228,7 @@ function saveStoredLikedPostIds(scope, likedPostIds) {
   )
 }
 
-function loadStoredSupporters(scope) {
-  if (!canUseStorage()) {
-    return []
-  }
 
-  try {
-    const rawSupporters = window.localStorage.getItem(getSupportersStorageKey(scope))
-    const parsedSupporters = rawSupporters ? JSON.parse(rawSupporters) : []
-    return Array.isArray(parsedSupporters)
-      ? sortLatestFirst(parsedSupporters.map(sanitizeSupporter))
-      : []
-  } catch {
-    return []
-  }
-}
-
-function saveStoredSupporters(scope, supporters) {
-  if (!canUseStorage()) {
-    return
-  }
-
-  window.localStorage.setItem(
-    getSupportersStorageKey(scope),
-    JSON.stringify(supporters)
-  )
-}
 
 function formatRelativeTime(timestamp) {
   const diffMs = Date.now() - timestamp
@@ -293,8 +265,6 @@ export {
   POSTS_UPDATED_EVENT,
   loadStoredLikedPostIds,
   loadStoredPosts,
-  loadStoredSupporters,
   saveStoredLikedPostIds,
   saveStoredPosts,
-  saveStoredSupporters,
 }

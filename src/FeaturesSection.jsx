@@ -1,29 +1,24 @@
 const features = [
   {
     icon: '\u{1F4B8}',
-    title: 'Accept Donations',
-    description: 'Let supporters contribute in seconds with a simple, familiar flow.',
-  },
-  {
-    icon: '\u{1F4E6}',
-    title: 'Sell Digital Products',
-    description: 'Offer templates, guides, and downloads from the same creator page.',
+    title: 'Accept Support via UPI',
+    description: 'Receive payments directly through UPI. No gateway, no middleman, no delays.',
   },
   {
     icon: '\u{1F4F0}',
-    title: 'Post Content',
-    description: 'Share updates, behind-the-scenes notes, and exclusive posts with ease.',
+    title: 'Post Updates',
+    description: 'Share updates, behind-the-scenes notes, and milestones with your supporters.',
   },
   {
     icon: '\u{1F4CA}',
     title: 'Track Earnings',
-    description: 'Understand what is working with a clear view of support and growth.',
+    description: 'See who supported you, how much you earned, and watch your page grow.',
   },
 ]
 
 function FeaturesSection() {
   return (
-    <section className="px-6 py-20 sm:px-8 lg:px-10">
+    <section className="px-6 py-24 sm:px-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">
@@ -34,7 +29,7 @@ function FeaturesSection() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <article
               key={feature.title}

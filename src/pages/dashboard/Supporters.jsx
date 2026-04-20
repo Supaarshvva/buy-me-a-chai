@@ -27,7 +27,7 @@ function Supporters() {
   const [copyStatus, setCopyStatus] = useState('Copy Public Link')
 
   const username = profile?.username?.trim() || ''
-  const { supporters, totalAmount, totalSupporters } = useCreatorSupporters(username)
+  const { supporters, totalAmount, totalSupporters } = useCreatorSupporters(profile?.id)
   const publicProfileLink = username
     ? `${window.location.origin}/${username}`
     : ''

@@ -2,37 +2,37 @@ const reasons = [
   {
     icon: '\u26A1',
     title: 'Instant UPI Payments',
-    description: 'Receive support directly via UPI with zero friction.',
+    description: 'Supporters pay through UPI — the fastest, most familiar way to pay in India.',
   },
   {
     icon: '\u20B9',
-    title: 'No waiting for payouts',
-    description: 'Get your money instantly, no delays like other platforms.',
+    title: 'Money goes straight to you',
+    description: 'No middleman, no payout cycles. Your supporters pay you directly, every time.',
   },
   {
     icon: '\u2728',
-    title: 'Creator-first platform',
-    description: 'Designed specifically for Indian creators and freelancers.',
+    title: 'Made for Indian creators',
+    description: 'Whether you write, draw, teach, or build — this platform is designed for you.',
   },
 ]
 
 function WhySection() {
   return (
-    <section className="px-6 py-20 sm:px-8 lg:px-10">
+    <section className="px-6 py-24 sm:px-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">
             Why Buy Me a Chai?
           </p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
-            Built for creators in India
+            A simple way for creators to get support
           </h2>
           <p className="mt-4 text-lg leading-8 text-stone-600">
-            Everything you need to receive support, powered by UPI
+            No sign-up for supporters. No fees. Just UPI and genuine appreciation.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {reasons.map((reason) => (
             <article
               key={reason.title}

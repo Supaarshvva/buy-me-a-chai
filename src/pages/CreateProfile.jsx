@@ -1,39 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { POST_AUTH_REDIRECT_KEY } from '../services/postAuthRedirect.js'
 import supabase from '../services/supabase.js'
-
-function formatPermanentNameSeed(value) {
-  if (typeof value !== 'string' || !value.trim()) {
-    return ''
-  }
-
-  return value
-    .trim()
-    .split(/[._-]+/g)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ')
-}
-
-function getPermanentName(user) {
-  if (!user) {
-    return ''
-  }
-
-  return (
-    user.user_metadata?.full_name?.trim()
-    || user.user_metadata?.name?.trim()
-    || formatPermanentNameSeed(user.email?.split('@')[0] || '')
-  )
-}
 
 function CreateProfile() {
   const { user, refreshProfile } = useAuth()
   const navigate = useNavigate()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [username, setUsername] = useState('')
+  const [fullName, setFullName] = useState('')
   const [accountType, setAccountType] = useState('supporter')
   const [bio, setBio] = useState('')
   const [upiId, setUpiId] = useState('')
@@ -42,7 +18,6 @@ function CreateProfile() {
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
-  const permanentName = useMemo(() => getPermanentName(user), [user])
 
   useEffect(() => {
     return () => {
@@ -69,8 +44,8 @@ function CreateProfile() {
       nextErrors.username = 'Username is required.'
     }
 
-    if (!permanentName.trim()) {
-      nextErrors.fullName = 'Permanent name is unavailable for this account.'
+    if (!fullName.trim()) {
+      nextErrors.fullName = 'Full name is required.'
     }
 
     if (accountType === 'creator' && !upiId.trim()) {
@@ -89,6 +64,7 @@ function CreateProfile() {
     setIsSaving(true)
 
     const trimmedUsername = username.trim()
+    const trimmedFullName = fullName.trim()
     const trimmedBio = bio.trim()
     const trimmedUpiId = upiId.trim()
     let publicUrl
@@ -96,15 +72,11 @@ function CreateProfile() {
     if (avatarFile) {
       const filePath = `${user.id}/${avatarFile.name}`
 
-      console.log('Uploading file:', avatarFile)
-
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('Avatars')
         .upload(filePath, avatarFile, {
           upsert: true,
         })
-
-      console.log('Upload result:', uploadData, uploadError)
 
       if (uploadError) {
         console.error('UPLOAD FAILED', uploadError)
@@ -113,7 +85,6 @@ function CreateProfile() {
           .from('Avatars')
           .getPublicUrl(filePath)
 
-        console.log('Public URL:', publicUrlData)
         publicUrl = publicUrlData?.publicUrl
       }
     }
@@ -121,7 +92,7 @@ function CreateProfile() {
     const profilePayload = {
       id: user.id,
       username: trimmedUsername,
-      full_name: permanentName.trim(),
+      full_name: trimmedFullName,
       bio: trimmedBio,
       account_type: accountType,
       upi_id: trimmedUpiId || null,
@@ -133,8 +104,6 @@ function CreateProfile() {
       .upsert(profilePayload)
       .select()
       .maybeSingle()
-
-    console.log('DB save:', profileData, error)
 
     if (error) {
       console.error('Profile upsert failed:', error)
@@ -311,25 +280,25 @@ function CreateProfile() {
                 className="mb-2 block text-sm font-medium text-stone-700"
                 htmlFor="fullName"
               >
-                Permanent name
+                Full name
               </label>
               <input
                 id="fullName"
                 type="text"
-                value={permanentName}
-                readOnly
-                className={`w-full rounded-2xl border bg-stone-50 px-4 py-3 text-stone-600 outline-none transition duration-200 placeholder:text-stone-400 focus:ring-4 ${
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
+                className={`w-full rounded-2xl border bg-white px-4 py-3 text-stone-900 outline-none transition duration-200 placeholder:text-stone-400 focus:ring-4 ${
                   errors.fullName
                     ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
-                    : 'border-stone-200 focus:border-stone-200 focus:ring-stone-100'
+                    : 'border-stone-200 focus:border-amber-400 focus:ring-amber-100'
                 }`}
-                placeholder="Your permanent name"
+                placeholder="Your full name"
               />
               {errors.fullName ? (
                 <p className="mt-2 text-sm text-red-500">{errors.fullName}</p>
               ) : (
                 <p className="mt-2 text-sm text-stone-500">
-                  This name is fixed for your account and cannot be edited later.
+                  This name cannot be changed after saving.
                 </p>
               )}
             </div>

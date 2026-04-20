@@ -116,6 +116,7 @@ function Account() {
 
   /* Form fields - populated from profile on mount */
   const [username, setUsername] = useState('')
+  const [fullName, setFullName] = useState('')
   const [bio, setBio] = useState('')
   const [accountType, setAccountType] = useState('supporter')
   const [upiId, setUpiId] = useState('')
@@ -128,10 +129,14 @@ function Account() {
   const [errorMsg, setErrorMsg] = useState('')
   const [fieldErrors, setFieldErrors] = useState({})
 
+  /* full_name is editable only when the profile has no saved value yet */
+  const fullNameLocked = Boolean(profile?.full_name?.trim())
+
   /* Seed form with current profile values */
   useEffect(() => {
     if (profile) {
       setUsername(profile.username?.trim() ?? '')
+      setFullName(profile.full_name?.trim() ?? '')
       setBio(profile.bio?.trim() ?? '')
       setAccountType(profile.account_type?.trim() === 'creator' ? 'creator' : 'supporter')
       setUpiId(profile.upi_id?.trim() ?? '')
@@ -161,6 +166,7 @@ function Account() {
     /* Validate */
     const errs = {}
     if (!username.trim()) errs.username = 'Username is required.'
+    if (!fullNameLocked && !fullName.trim()) errs.fullName = 'Full name is required.'
     if (accountType === 'creator' && !upiId.trim()) errs.upiId = 'UPI ID is required for creator accounts.'
     setFieldErrors(errs)
     if (Object.keys(errs).length > 0 || !user) return
@@ -186,14 +192,14 @@ function Account() {
       avatarUrl = urlData?.publicUrl ?? avatarUrl
     }
 
-    /* Upsert profile (full_name is NOT included - it's read-only) */
+    /* Include full_name only when being set for the first time */
     const payload = {
       id: user.id,
-      full_name: profile?.full_name?.trim() ?? '',
       username: username.trim(),
       bio: bio.trim(),
       account_type: accountType,
       upi_id: upiId.trim() || null,
+      ...(!fullNameLocked && fullName.trim() ? { full_name: fullName.trim() } : {}),
       ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
     }
 
@@ -258,14 +264,23 @@ function Account() {
               />
             </Field>
 
-            {/* Full name (read-only) */}
-            <Field id="full-name" label="Full name" hint="Cannot be changed">
+            {/* Full name — editable only when not yet set */}
+            <Field
+              id="full-name"
+              label="Full name"
+              hint={fullNameLocked ? 'This cannot be changed later' : 'Required'}
+              error={fieldErrors.fullName}
+            >
               <input
                 id="full-name"
                 type="text"
-                value={profile?.full_name?.trim() ?? ''}
-                readOnly
-                style={disabledInputStyle}
+                value={fullName}
+                onChange={fullNameLocked ? undefined : (e) => setFullName(e.target.value)}
+                readOnly={fullNameLocked}
+                style={fullNameLocked ? disabledInputStyle : inputStyle}
+                placeholder="Your full name"
+                onFocus={fullNameLocked ? undefined : (e) => { e.currentTarget.style.borderColor = '#f59e0b'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.15)' }}
+                onBlur={fullNameLocked ? undefined : (e) => { e.currentTarget.style.borderColor = '#d6d3d1'; e.currentTarget.style.boxShadow = 'none' }}
               />
             </Field>
 

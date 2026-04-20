@@ -2,13 +2,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HeartIcon } from '../../components/icons/AppIcons.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
-import { loadStoredSupporters } from '../../services/creatorStorage.js'
 import {
   FOLLOWERS_UPDATED_EVENT,
   getFollowedCreatorUsernames,
 } from '../../services/followerService.js'
 import supabase from '../../services/supabase.js'
-import { getCreatorSupportSummary } from '../../services/supportService.js'
+import { fetchAllCreatorSupportCounts } from '../../services/supportService.js'
 
 const TRENDING_CREATORS_LIMIT = 10
 
@@ -301,21 +300,20 @@ function Explore() {
         return
       }
 
+      // Fetch aggregate support counts in a single query (no N+1)
+      const supportCountsMap = await fetchAllCreatorSupportCounts()
+
       const nextCreators = data
         .filter((creator) => typeof creator?.username === 'string' && creator.username.trim())
         .filter((creator) => creator.username.trim() !== currentUsername)
         .map((creator) => {
-          const supporterSummary = getCreatorSupportSummary(creator.username)
-          const latestSupportTimestamp = normalizeTimestamp(
-            loadStoredSupporters(creator.username)[0]?.createdAt
-          )
-
+          const counts = supportCountsMap.get(creator.id)
           return {
             ...creator,
             bio: creator.bio?.trim() || '',
             createdAt: normalizeTimestamp(creator.created_at),
-            latestActivityAt: latestSupportTimestamp,
-            supporterCount: supporterSummary.totalSupporters,
+            latestActivityAt: 0,
+            supporterCount: counts?.supporterCount || 0,
           }
         })
 
@@ -329,25 +327,11 @@ function Explore() {
       void loadCreators()
     }
 
-    const handleStorage = (event) => {
-      if (
-        !event.key
-        || event.key.startsWith('buy-me-a-chai:supporters:')
-        || event.key === 'followers'
-      ) {
-        void loadCreators()
-      }
-    }
-
-    window.addEventListener('buy-me-a-chai:supporters-updated', handleRefresh)
     window.addEventListener(FOLLOWERS_UPDATED_EVENT, handleRefresh)
-    window.addEventListener('storage', handleStorage)
 
     return () => {
       isMounted = false
-      window.removeEventListener('buy-me-a-chai:supporters-updated', handleRefresh)
       window.removeEventListener(FOLLOWERS_UPDATED_EVENT, handleRefresh)
-      window.removeEventListener('storage', handleStorage)
     }
   }, [currentUsername])
 

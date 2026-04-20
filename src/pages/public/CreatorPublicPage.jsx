@@ -4,6 +4,7 @@ import {
   CoffeeIcon,
   HeartIcon,
 } from '../../components/icons/AppIcons.jsx'
+import UpiPaymentModal from '../../components/UpiPaymentModal.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import supabase from '../../services/supabase.js'
 import {
@@ -21,8 +22,8 @@ import {
 } from '../../services/postService.js'
 import useCreatorSupporters from '../../hooks/useCreatorSupporters.js'
 import {
-  completeSupport,
   formatSupportActivity,
+  insertSupport,
 } from '../../services/supportService.js'
 import {
   FOLLOWERS_UPDATED_EVENT,
@@ -52,14 +53,15 @@ function CreatorPublicPage({ showAllPosts = false }) {
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCreator, setFollowingCreator] = useState(false)
   const [toast, setToast] = useState(null)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   const storageScope = profile?.username || username
-  const supporterScope = profile?.username || username
   const currentUsername = currentUserProfile?.username?.trim() || ''
   const {
     recentSupporters,
+    reloadSupporters,
     supporters,
-  } = useCreatorSupporters(supporterScope)
+  } = useCreatorSupporters(profile?.id)
   const recentPosts = useMemo(() => posts.slice(0, 4), [posts])
   const supporterCountLabel = `${supporters.length} supporter${supporters.length === 1 ? '' : 's'}`
   const followerCountLabel = `${followerCount} follower${followerCount === 1 ? '' : 's'}`
@@ -94,7 +96,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, full_name, bio, avatar_url')
+        .select('id, username, full_name, bio, avatar_url, upi_id')
         .eq('username', username)
         .maybeSingle()
 
@@ -264,36 +266,41 @@ function CreatorPublicPage({ showAllPosts = false }) {
     }
   }
 
-  const handleSupport = async () => {
-    const trimmedName = supporterName.trim()
-    const trimmedMessage = supporterMessage.trim()
-
+  const handleSupport = () => {
     if (!selectedSupportAmount || selectedSupportAmount <= 0) {
       showToast('Choose how many chai cups to send')
       return
     }
 
-    setIsSubmittingSupport(true)
-    try {
-      await new Promise((resolve) => window.setTimeout(resolve, 600))
+    setShowPaymentModal(true)
+  }
 
-      const createdAt = Date.now()
-      await completeSupport({
+  const handlePaymentVerified = async (referenceNumber) => {
+    const trimmedName = supporterName.trim()
+    const trimmedMessage = supporterMessage.trim()
+
+    try {
+      // Insert into Supabase supports table (RLS: auth.uid() = supporter_id)
+      await insertSupport({
+        creatorId: profile.id,
+        supporterId: currentUser?.id,
         amount: selectedSupportAmount,
-        creatorId: profile?.id,
-        creatorUsername: profile?.username || username,
         cups: selectedSupportQuantity,
+        referenceNumber,
+        supporterName: trimmedName || actorName,
         message: trimmedMessage,
-        supporterName: trimmedName,
-        timestamp: createdAt,
       })
 
+      // Refresh supporter list from Supabase
+      reloadSupporters()
+
+      // Send notification to creator
       if (profile?.id && currentUser?.id) {
         const { error } = await supabase.from('notifications').insert({
           receiver_id: profile.id,
           sender_id: currentUser.id,
           type: 'support',
-          message: `${currentUserProfile?.username || 'Someone'} supported you`,
+          message: `${actorName} supported you with ₹${selectedSupportAmount}`,
         })
 
         if (error) {
@@ -301,15 +308,15 @@ function CreatorPublicPage({ showAllPosts = false }) {
         }
       }
 
+      // Reset form
       setSupporterName('')
       setSupporterMessage('')
       setSelectedQuantity(chaiQuantities[1])
       setCustomQuantity('')
-      showToast('Support sent')
-    } catch {
-      showToast('Unable to send chai right now')
-    } finally {
-      setIsSubmittingSupport(false)
+      showToast('Support sent successfully!')
+    } catch (error) {
+      console.error('[CreatorPublicPage] handlePaymentVerified error:', error)
+      showToast('Unable to record support right now')
     }
   }
 
@@ -392,6 +399,15 @@ function CreatorPublicPage({ showAllPosts = false }) {
     .map((part) => part[0]?.toUpperCase() ?? '')
     .join('')
     || 'CR'
+
+  const isSelfSupport = Boolean(currentUser?.id && profile?.id && currentUser.id === profile.id)
+  const creatorHasUpi = Boolean(profile?.upi_id?.trim())
+  const supportDisabled = isSelfSupport || !creatorHasUpi
+  const supportDisabledReason = isSelfSupport
+    ? 'You cannot support your own page'
+    : !creatorHasUpi
+      ? 'Creator has not set up UPI'
+      : null
 
   const renderPostCard = (post, compact = false) => (
     <article
@@ -769,10 +785,16 @@ function CreatorPublicPage({ showAllPosts = false }) {
                 </label>
               </div>
 
+              {supportDisabledReason ? (
+                <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm font-medium text-amber-700">
+                  {supportDisabledReason}
+                </p>
+              ) : null}
+
               <button
                 type="button"
                 onClick={handleSupport}
-                disabled={isSubmittingSupport}
+                disabled={isSubmittingSupport || supportDisabled}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-stone-900 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-stone-900/10 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 <CoffeeIcon size={16} />
@@ -831,6 +853,16 @@ function CreatorPublicPage({ showAllPosts = false }) {
             </section>
           </aside>
         </div>
+
+        <UpiPaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          creatorName={fullName}
+          creatorUpiId={profile?.upi_id || ''}
+          amount={selectedSupportAmount}
+          cups={selectedSupportQuantity}
+          onPaymentVerified={handlePaymentVerified}
+        />
 
         {toast ? (
           <div className="pointer-events-none fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
