@@ -20,7 +20,7 @@ function AuthProvider({ children }) {
 
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, username, full_name, bio, avatar_url')
+      .select('id, username, full_name, bio, avatar_url, account_type, upi_id')
       .eq('id', targetUser.id)
       .maybeSingle()
 
@@ -85,7 +85,7 @@ function AuthProvider({ children }) {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, full_name, bio, avatar_url')
+        .select('id, username, full_name, bio, avatar_url, account_type, upi_id')
         .eq('id', user.id)
         .maybeSingle()
 

@@ -306,8 +306,8 @@ function PostDetailPage() {
 
   if (isLoadingProfile || isLoadingPost) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10">
-        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-10 text-center shadow-xl shadow-stone-900/5">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 sm:px-6 sm:py-10">
+        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-6 text-center shadow-xl shadow-stone-900/5 sm:p-10">
           <p className="text-base leading-7 text-stone-500">Loading post...</p>
         </div>
       </div>
@@ -316,8 +316,8 @@ function PostDetailPage() {
 
   if (profileMissing || !profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10">
-        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-10 text-center shadow-xl shadow-stone-900/5">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 sm:px-6 sm:py-10">
+        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-6 text-center shadow-xl shadow-stone-900/5 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
             Creator Not Found
           </p>
@@ -340,8 +340,8 @@ function PostDetailPage() {
 
   if (postMissing || !post) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10">
-        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-10 text-center shadow-xl shadow-stone-900/5">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 sm:px-6 sm:py-10">
+        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-6 text-center shadow-xl shadow-stone-900/5 sm:p-10">
           <h1 className="text-3xl font-semibold tracking-tight text-stone-950">
             Post not found
           </h1>
@@ -365,7 +365,7 @@ function PostDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10 text-stone-900 sm:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 text-stone-900 sm:px-8 sm:py-10">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex flex-wrap items-center gap-3 text-sm text-stone-600">
           <Link
@@ -382,10 +382,10 @@ function PostDetailPage() {
           </Link>
         </div>
 
-        <article className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5 sm:p-10">
+        <article className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-10">
           <div className="mx-auto flex max-w-2xl flex-col gap-8">
             <header className="space-y-6">
-              <div className="flex items-center justify-center gap-4 text-left">
+              <div className="flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:text-left">
                 {profile.avatar_url?.trim() ? (
                   <img
                     src={profile.avatar_url.trim()}
@@ -413,7 +413,7 @@ function PostDetailPage() {
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
                   Published {formatRelativeTime(post.createdAt)}
                 </p>
-                <h1 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
+                <h1 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
                   {postTitle}
                 </h1>
                 <p className="text-sm text-stone-500">{publishedDate}</p>
@@ -578,7 +578,7 @@ function PostDetailPage() {
         </article>
 
         {toast ? (
-          <div className="pointer-events-none fixed bottom-6 right-6 z-40">
+          <div className="pointer-events-none fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
             <div className="rounded-2xl border border-stone-200/80 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-2xl shadow-stone-900/10">
               {toast.message}
             </div>

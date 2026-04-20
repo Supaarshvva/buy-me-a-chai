@@ -349,8 +349,8 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
   if (isLoadingProfile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10">
-        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-10 text-center shadow-xl shadow-stone-900/5">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 sm:px-6 sm:py-10">
+        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-6 text-center shadow-xl shadow-stone-900/5 sm:p-10">
           <p className="text-base leading-7 text-stone-500">Loading creator profile...</p>
         </div>
       </div>
@@ -359,8 +359,8 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
   if (profileMissing || !profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10">
-        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-10 text-center shadow-xl shadow-stone-900/5">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 sm:px-6 sm:py-10">
+        <div className="w-full max-w-3xl rounded-[32px] border border-stone-200/70 bg-white p-6 text-center shadow-xl shadow-stone-900/5 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
             Creator Not Found
           </p>
@@ -411,7 +411,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
         }
       }}
       className={`cursor-pointer rounded-[28px] border border-stone-200/70 bg-white shadow-lg shadow-stone-900/5 transition duration-200 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-100 ${
-        compact ? 'p-5' : 'p-6'
+        compact ? 'p-5' : 'p-5 sm:p-6'
       }`}
     >
       <div className="flex flex-col gap-4">
@@ -486,11 +486,11 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
   if (showAllPosts) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10 text-stone-900 sm:px-8 lg:px-10">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 text-stone-900 sm:px-8 sm:py-10 lg:px-10">
         <div className="mx-auto flex max-w-5xl flex-col gap-8">
-          <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+          <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-center gap-5">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -518,14 +518,14 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
               <Link
                 to={`/${profile.username}`}
-                className="inline-flex rounded-2xl border border-stone-300 bg-white px-5 py-3 text-sm font-medium text-stone-700 transition duration-200 hover:-translate-y-0.5 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-amber-100"
+                className="inline-flex w-full rounded-2xl border border-stone-300 bg-white px-5 py-3 text-sm font-medium text-stone-700 transition duration-200 hover:-translate-y-0.5 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-amber-100 sm:w-auto"
               >
                 Back to profile
               </Link>
             </div>
           </section>
 
-          <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+          <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
             <div className="flex flex-col gap-6">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
@@ -557,7 +557,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
           </section>
 
           {toast ? (
-            <div className="pointer-events-none fixed bottom-6 right-6 z-40">
+            <div className="pointer-events-none fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
               <div className="rounded-2xl border border-stone-200/80 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-2xl shadow-stone-900/10">
                 {toast.message}
               </div>
@@ -569,10 +569,10 @@ function CreatorPublicPage({ showAllPosts = false }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-6 py-10 text-stone-900 sm:px-8 lg:px-10">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 px-4 py-6 text-stone-900 sm:px-8 sm:py-10 lg:px-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+        <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
@@ -585,8 +585,8 @@ function CreatorPublicPage({ showAllPosts = false }) {
               </div>
             )}
 
-            <div>
-              <h1 className="text-4xl font-semibold tracking-tight text-stone-950">
+            <div className="min-w-0">
+              <h1 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
                 {fullName}
               </h1>
               <p className="mt-2 text-base text-stone-500">@{profile.username}</p>
@@ -599,7 +599,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
               <button
                 type="button"
                 onClick={handleToggleFollow}
-                className={`sm:ml-auto rounded-2xl px-5 py-3 text-sm font-medium transition duration-200 focus:outline-none focus:ring-4 focus:ring-amber-100 ${
+                className={`w-full rounded-2xl px-5 py-3 text-sm font-medium transition duration-200 focus:outline-none focus:ring-4 focus:ring-amber-100 sm:ml-auto sm:w-auto ${
                   followingCreator
                     ? 'border border-stone-300 bg-white text-stone-700 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950'
                     : 'bg-stone-900 text-white shadow-lg shadow-stone-900/10 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl'
@@ -613,14 +613,14 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_360px]">
           <div className="space-y-8">
-            <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+            <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
                 About
               </p>
               <p className="mt-4 text-base leading-7 text-stone-600">{bio}</p>
             </section>
 
-            <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+            <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
@@ -636,7 +636,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
 
                 <Link
                   to={publicPostsPath}
-                  className="inline-flex rounded-2xl border border-stone-300 bg-white px-5 py-3 text-sm font-medium text-stone-700 transition duration-200 hover:-translate-y-0.5 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-amber-100"
+                  className="inline-flex w-full rounded-2xl border border-stone-300 bg-white px-5 py-3 text-sm font-medium text-stone-700 transition duration-200 hover:-translate-y-0.5 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-amber-100 sm:w-auto"
                 >
                   View all posts
                 </Link>
@@ -660,7 +660,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
-            <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+            <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
                 Support
               </p>
@@ -780,7 +780,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
               </button>
             </section>
 
-            <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+            <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
               <h2 className="text-3xl font-semibold tracking-tight text-stone-950">
                 Recent support
               </h2>
@@ -833,7 +833,7 @@ function CreatorPublicPage({ showAllPosts = false }) {
         </div>
 
         {toast ? (
-          <div className="pointer-events-none fixed bottom-6 right-6 z-40">
+          <div className="pointer-events-none fixed inset-x-4 bottom-4 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
             <div className="rounded-2xl border border-stone-200/80 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-2xl shadow-stone-900/10">
               {toast.message}
             </div>

@@ -52,7 +52,7 @@ function AvatarPicker({ currentUrl, preview, onFileChange }) {
   const display = preview || currentUrl
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
       {/* Circle preview */}
       <div
         style={{
@@ -117,6 +117,8 @@ function Account() {
   /* Form fields - populated from profile on mount */
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
+  const [accountType, setAccountType] = useState('supporter')
+  const [upiId, setUpiId] = useState('')
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState('')
 
@@ -131,6 +133,8 @@ function Account() {
     if (profile) {
       setUsername(profile.username?.trim() ?? '')
       setBio(profile.bio?.trim() ?? '')
+      setAccountType(profile.account_type?.trim() === 'creator' ? 'creator' : 'supporter')
+      setUpiId(profile.upi_id?.trim() ?? '')
     }
   }, [profile])
 
@@ -157,6 +161,7 @@ function Account() {
     /* Validate */
     const errs = {}
     if (!username.trim()) errs.username = 'Username is required.'
+    if (accountType === 'creator' && !upiId.trim()) errs.upiId = 'UPI ID is required for creator accounts.'
     setFieldErrors(errs)
     if (Object.keys(errs).length > 0 || !user) return
 
@@ -184,8 +189,11 @@ function Account() {
     /* Upsert profile (full_name is NOT included - it's read-only) */
     const payload = {
       id: user.id,
+      full_name: profile?.full_name?.trim() ?? '',
       username: username.trim(),
       bio: bio.trim(),
+      account_type: accountType,
+      upi_id: upiId.trim() || null,
       ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
     }
 
@@ -261,6 +269,20 @@ function Account() {
               />
             </Field>
 
+            <Field id="account-type" label="Account type">
+              <select
+                id="account-type"
+                value={accountType}
+                onChange={(event) => setAccountType(event.target.value)}
+                style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#f59e0b'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.15)' }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#d6d3d1'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                <option value="creator">Creator</option>
+                <option value="supporter">Supporter</option>
+              </select>
+            </Field>
+
             {/* Username */}
             <Field id="username" label="Username" error={fieldErrors.username}>
               <input
@@ -270,6 +292,23 @@ function Account() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="your-handle"
                 autoComplete="username"
+                style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#f59e0b'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.15)' }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#d6d3d1'; e.currentTarget.style.boxShadow = 'none' }}
+              />
+            </Field>
+
+            <Field
+              id="upi-id"
+              label={`UPI ID ${accountType === 'creator' ? '(required)' : '(optional)'}`}
+              error={fieldErrors.upiId}
+            >
+              <input
+                id="upi-id"
+                type="text"
+                value={upiId}
+                onChange={(e) => setUpiId(e.target.value)}
+                placeholder="yourname@bank"
                 style={inputStyle}
                 onFocus={(e) => { e.currentTarget.style.borderColor = '#f59e0b'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.15)' }}
                 onBlur={(e) => { e.currentTarget.style.borderColor = '#d6d3d1'; e.currentTarget.style.boxShadow = 'none' }}

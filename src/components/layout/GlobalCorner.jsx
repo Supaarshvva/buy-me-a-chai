@@ -133,7 +133,7 @@ function NotificationPanel({ open, notifications }) {
         position: 'absolute',
         top: 'calc(100% + 10px)',
         right: 0,
-        width: '320px',
+        width: 'min(320px, calc(100vw - 32px))',
         background: '#ffffff',
         borderRadius: '16px',
         border: '1px solid #e7e5e4',
@@ -429,8 +429,8 @@ function GlobalCorner() {
       aria-label="Corner controls"
       style={{
         position: 'absolute',
-        top: '20px',
-        right: '24px',
+        top: 'clamp(14px, 2vw, 20px)',
+        right: 'clamp(12px, 4vw, 24px)',
         display: 'flex',
         alignItems: 'center',
         gap: '14px',

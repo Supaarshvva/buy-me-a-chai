@@ -49,7 +49,7 @@ function Supporters() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+      <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
         <div className="flex flex-col gap-6">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
@@ -92,7 +92,7 @@ function Supporters() {
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-stone-200/70 bg-white p-8 shadow-xl shadow-stone-900/5">
+      <section className="rounded-[32px] border border-stone-200/70 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-8">
         <div className="flex flex-col gap-6">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">
@@ -139,7 +139,7 @@ function Supporters() {
                 return (
                   <article
                     key={supporter.id}
-                    className="rounded-[28px] border border-stone-200/70 bg-gradient-to-br from-stone-50 via-white to-white p-6 shadow-lg shadow-stone-900/5"
+                    className="rounded-[28px] border border-stone-200/70 bg-gradient-to-br from-stone-50 via-white to-white p-5 shadow-lg shadow-stone-900/5 sm:p-6"
                   >
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="flex min-w-0 items-start gap-4">
@@ -172,7 +172,7 @@ function Supporters() {
                         </div>
                       </div>
 
-                      <div className="pl-16 sm:pl-0 sm:text-right">
+                      <div className="w-full pl-16 sm:w-auto sm:pl-0 sm:text-right">
                         <p className="text-2xl font-semibold tracking-tight text-stone-950">
                           {formatCurrency(supporter.amount)}
                         </p>
