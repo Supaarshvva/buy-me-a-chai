@@ -1,8 +1,10 @@
 ☕ Buy Me a Chai
 
+🎥 Project Demo Video:
+https://drive.google.com/file/d/1jGbqHmdPN8kKFU1Cw9y-6hk5SfIeQVWF/view?usp=drivesdk
+
 A full-stack creator support platform where users can receive direct support via UPI.
 Built with a clean UI, real-time data handling, and secure backend using Supabase.
-
 ---
 
 🚀 Live Concept
